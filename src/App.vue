@@ -10,7 +10,6 @@
       <h2>QR điểm danh hôm nay</h2>
       <div v-if="qrCode" class="qr-display">
         <img :src="qrCode" alt="QR code" />
-        <p class="url">{{ url }}</p>
       </div>
       <div v-else>
         <button @click="generateQr">Tạo QR</button>
@@ -50,21 +49,21 @@ async function generateQr() {
   const encodedName = encodeData(storedName);
   const encodedDate = encodeData(today);
 
-  url.value = `https://script.google.com/macros/s/AKfycbwizYOmq6oeyXb1GL_dWpOzJ_9hF57zPva-ICPTjEUIljxsJHRt_utkPNajuPG8MNbo/exec?name=${encodedName}&date=${encodedDate}`;
+  url.value = `https://script.google.com/macros/s/AKfycbx7ZPwo1x_T2WLkgDyDA-gg9-vNxnQHS0eHlE4KNoCjCxcDP2lh8qoj_h6CbaRcgtu8/exec?name=${encodedName}&date=${encodedDate}`;
   qrCode.value = await QRCode.toDataURL(url.value);
 
   lastDate = today;
 }
 
 onMounted(() => {
-  // const stored = localStorage.getItem('userName');
-  // if (stored) {
-  //   nameStored.value = true;
-  //   name.value = stored;
-  //   generateQr();
+  const stored = localStorage.getItem('userName');
+  if (stored) {
+    nameStored.value = true;
+    name.value = stored;
+    generateQr();
 
-  //   setInterval(generateQr, 60 * 1000); // auto refresh mỗi 1 phút
-  // }
+    setInterval(generateQr, 60 * 1000); // auto refresh mỗi 1 phút
+  }
 });
 </script>
 

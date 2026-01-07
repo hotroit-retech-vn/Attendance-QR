@@ -24,6 +24,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": "v1Compatible",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -31,5 +32,14 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://hoa1210.github.io/attendance-app/update.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDgyNjlFQkMyQTQyQzQzMUUKUldRZVF5eWt3dXRwZ3FueVQ4K2VhVkk0cUVUalhRanQzY1NpOG14SkZJVGNHWEppNjV0TmE0Nk4K"
+    }
   }
 }
