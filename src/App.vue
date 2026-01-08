@@ -1,15 +1,38 @@
 <template>
   <div class="container">
+    <Transition name="fade">
+      <div v-if="updateAvailable" class="update-overlay">
+        <div class="update-card">
+          <h2>🚀 Cập nhật hệ thống</h2>
+          {{ newVersion }}
+          <p>Phiên bản mới <strong>v{{ newVersion }}</strong> đã sẵn sàng.</p>
+          
+          <div v-if="isUpdating" class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" :style="{ width: downloadProgress + '%' }"></div>
+            </div>
+            <span>Đang tải: {{ downloadProgress }}%</span>
+          </div>
+
+          <div v-else class="update-actions">
+            <button @click="installAndRestart" class="btn-update">Cập nhật ngay</button>
+            <p class="update-note">Ứng dụng sẽ tự khởi động lại sau khi xong.</p>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <div v-if="!nameStored" class="card name-input">
       <h2>Nhập tên bạn</h2>
-      <input v-model="name" placeholder="Nhập tên bạn" />
+      <input v-model="name" placeholder="Ví dụ: Nguyễn Văn A" />
       <button @click="saveName">Xác nhận</button>
     </div>
 
     <div v-else class="card qr-section">
-      <h2>QR điểm danh hôm nay</h2>
+      <h2>QR điểm danh hôm nay cũ</h2>
       <div v-if="qrCode" class="qr-display">
         <img :src="qrCode" alt="QR code" />
+        <p class="user-name">Xin chào, {{ name }}!</p>
       </div>
       <div v-else>
         <button @click="generateQr">Tạo QR</button>
@@ -21,7 +44,19 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import QRCode from 'qrcode';
+import { useAppUpdater } from './composables/useUpdater';
 
+// Khởi tạo Updater
+const { 
+  updateAvailable, 
+  isUpdating, 
+  downloadProgress, 
+  newVersion, 
+  checkForUpdates, 
+  installAndRestart 
+} = useAppUpdater();
+
+// Logic QR cũ của bạn
 const name = ref('');
 const qrCode = ref('');
 const url = ref('');
@@ -36,7 +71,7 @@ function saveName() {
   if (!name.value) return alert('Nhập tên đi bro!');
   localStorage.setItem('userName', name.value);
   nameStored.value = true;
-  generateQr(); // tạo QR ngay sau khi lưu tên
+  generateQr();
 }
 
 async function generateQr() {
@@ -55,14 +90,15 @@ async function generateQr() {
   lastDate = today;
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await checkForUpdates();
+
   const stored = localStorage.getItem('userName');
   if (stored) {
     nameStored.value = true;
     name.value = stored;
     generateQr();
-
-    setInterval(generateQr, 60 * 1000); // auto refresh mỗi 1 phút
+    setInterval(generateQr, 60 * 1000);
   }
 });
 </script>
@@ -70,55 +106,85 @@ onMounted(() => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-body, html {
-  margin: 0;
-  padding: 0;
+/* Style cho Updater */
+.update-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
 }
 
+.update-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 350px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.progress-container {
+  margin-top: 1.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4f46e5;
+  transition: width 0.3s ease;
+}
+
+.btn-update {
+  background: #10b981;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.update-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 1rem;
+}
+
+/* Style cũ của bạn */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Inter', sans-serif;
-  padding: 1rem;
+  min-height: 100vh;
+  background: #f3f4f6;
 }
 
 .card {
   background: #ffffff;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2.5rem;
   max-width: 400px;
-  width: 100%;
+  width: 90%;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
-}
-
-h2 {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 1.5rem;
 }
 
 input {
   width: 100%;
-  padding: 0.8rem 0.2rem;
+  padding: 0.8rem;
   border-radius: 10px;
   border: 1px solid #ccc;
-  font-size: 1rem;
   margin-bottom: 1rem;
-  transition: border 0.2s;
-}
-
-input:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 5px rgba(79, 70, 229, 0.3);
+  box-sizing: border-box;
 }
 
 button {
@@ -127,36 +193,23 @@ button {
   background: #4f46e5;
   color: #fff;
   border: none;
-  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-button:hover {
-  background: #4338ca;
-  transform: translateY(-2px);
-}
-
-.qr-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 1.5rem;
+  width: 100%;
 }
 
 .qr-display img {
   width: 220px;
   height: 220px;
-  border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   margin-bottom: 1rem;
 }
 
-.url {
-  font-size: 0.85rem;
-  color: #555;
-  word-break: break-all;
-  text-align: center;
+.user-name {
+  font-weight: 600;
+  color: #4f46e5;
 }
+
+/* Hiệu ứng mờ dần */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

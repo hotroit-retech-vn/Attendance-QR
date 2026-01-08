@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "attendanceor",
+  "productName": "Ứng dụng điểm danh Attendanceor",
   "version": "0.1.0",
   "identifier": "com.hoamadao.attendanceor",
   "build": {
@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "attendanceor",
+        "title": "Attendanceor",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "devtools": true
       }
     ],
     "security": {
@@ -39,7 +40,7 @@
       "endpoints": [
         "https://hoa1210.github.io/attendance-app/update.json"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDgyNjlFQkMyQTQyQzQzMUUKUldRZVF5eWt3dXRwZ3FueVQ4K2VhVkk0cUVUalhRanQzY1NpOG14SkZJVGNHWEppNjV0TmE0Nk4K"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM1NzQ5QkQ5ODkxM0M0NTgKUldSWXhCT0oyWnQweGRxblE0K0U4TVJhbEIxbkhwblJZTGp2VHNoNGl1eDBHRS9oTlUvNlh4dXEK"
     }
   }
 }
