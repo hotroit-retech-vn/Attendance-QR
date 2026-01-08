@@ -38,7 +38,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://hoa1210.github.io/attendance-app/update.json"
+        "https://api.npoint.io/045e003f8d73d2795b47"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM1NzQ5QkQ5ODkxM0M0NTgKUldSWXhCT0oyWnQweGRxblE0K0U4TVJhbEIxbkhwblJZTGp2VHNoNGl1eDBHRS9oTlUvNlh4dXEK"
     }
