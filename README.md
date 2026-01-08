@@ -8,4 +8,4 @@ This template should help get you started developing with Vue 3 and TypeScript i
 
 npm run tauri dev	Chạy ứng dụng chế độ phát triển
 npm run tauri build	Build ứng dụng (không có chữ ký - chỉ dùng test local)
-dotenv -e .env -- tauri build	Build bản phát hành có chữ ký
+dotenv -e .env -- npm run tauri build	Build bản phát hành có chữ ký

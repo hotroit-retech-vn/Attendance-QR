@@ -29,7 +29,7 @@
     </div>
 
     <div v-else class="card qr-section">
-      <h2>QR điểm danh hôm nay cũ</h2>
+      <h2>QR điểm danh hôm nay</h2>
       <div v-if="qrCode" class="qr-display">
         <img :src="qrCode" alt="QR code" />
         <p class="user-name">Xin chào, {{ name }}!</p>
