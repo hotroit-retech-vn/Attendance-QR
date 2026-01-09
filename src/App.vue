@@ -45,27 +45,34 @@
 import { ref, onMounted } from 'vue';
 import QRCode from 'qrcode';
 import { useAppUpdater } from './composables/useUpdater';
+import { invoke } from '@tauri-apps/api/core';
 
 // Khởi tạo Updater
-const { 
-  updateAvailable, 
-  isUpdating, 
-  downloadProgress, 
-  newVersion, 
-  checkForUpdates, 
-  installAndRestart 
+const {
+  updateAvailable,
+  isUpdating,
+  downloadProgress,
+  newVersion,
+  checkForUpdates,
+  installAndRestart
 } = useAppUpdater();
 
 // Logic QR cũ của bạn
+const systemInfo = ref({
+  os: '',
+  arch: '',
+  host: '',
+});
 const name = ref('');
 const qrCode = ref('');
 const url = ref('');
 const nameStored = ref(false);
-let lastDate = '';
 
-function encodeData(input: string) {
-  return btoa(unescape(encodeURIComponent(input)));
+async function loadSystemInfo() {
+  const [os, arch, host] = await invoke<[string, string, string]>('get_system_info');
+  systemInfo.value = { os, arch, host };
 }
+
 
 function saveName() {
   if (!name.value) return alert('Nhập tên đi bro!');
@@ -79,20 +86,25 @@ async function generateQr() {
   if (!storedName) return;
 
   const today = new Date().toISOString().split('T')[0];
-  if (today === lastDate) return;
 
-  const encodedName = encodeData(storedName);
-  const encodedDate = encodeData(today);
+  const payload = {
+    name: storedName,
+    date: today,
+    os: systemInfo.value.os,
+    arch: systemInfo.value.arch,
+    host: systemInfo.value.host,
+  };
 
-  url.value = `https://script.google.com/macros/s/AKfycbx7ZPwo1x_T2WLkgDyDA-gg9-vNxnQHS0eHlE4KNoCjCxcDP2lh8qoj_h6CbaRcgtu8/exec?name=${encodedName}&date=${encodedDate}`;
+  const encodedPayload = btoa(encodeURIComponent(JSON.stringify(payload)));
+
+
+  url.value = `https://script.google.com/macros/s/AKfycbx7ZPwo1x_T2WLkgDyDA-gg9-vNxnQHS0eHlE4KNoCjCxcDP2lh8qoj_h6CbaRcgtu8/exec?data=${encodedPayload}`;
   qrCode.value = await QRCode.toDataURL(url.value);
-
-  lastDate = today;
 }
 
 onMounted(async () => {
   await checkForUpdates();
-
+  await loadSystemInfo();
   const stored = localStorage.getItem('userName');
   if (stored) {
     nameStored.value = true;
@@ -124,7 +136,7 @@ onMounted(async () => {
   border-radius: 20px;
   text-align: center;
   max-width: 350px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .progress-container {
@@ -210,6 +222,13 @@ button {
 }
 
 /* Hiệu ứng mờ dần */
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
