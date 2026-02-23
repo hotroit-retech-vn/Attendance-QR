@@ -85,7 +85,10 @@ async function generateQr() {
   const storedName = localStorage.getItem('userName');
   if (!storedName) return;
 
-  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const today = new Date(
+    now.getTime() + 7 * 60 * 60 * 1000
+  ).toISOString().split("T")[0];
 
   const payload = {
     name: storedName,
@@ -95,10 +98,12 @@ async function generateQr() {
     host: systemInfo.value.host,
   };
 
-  const encodedPayload = btoa(encodeURIComponent(JSON.stringify(payload)));
+  const encodedPayload = encodeURIComponent(
+    btoa(encodeURIComponent(JSON.stringify(payload)))
+  );
 
 
-  url.value = `https://script.google.com/macros/s/AKfycbx7ZPwo1x_T2WLkgDyDA-gg9-vNxnQHS0eHlE4KNoCjCxcDP2lh8qoj_h6CbaRcgtu8/exec?data=${encodedPayload}`;
+  url.value = `https://script.google.com/macros/s/AKfycbwRD41icYoGnNONq8lKqyKJdt5gy_dYoC49Ul0zLVIWHe8kdpdm1wLccoRP-o_HU46J/exec?data=${encodedPayload}`;
   qrCode.value = await QRCode.toDataURL(url.value);
 }
 
