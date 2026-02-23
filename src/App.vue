@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mt-10">
     <Transition name="fade">
       <div v-if="updateAvailable" class="update-overlay">
         <div class="update-card">
@@ -32,7 +32,7 @@
       <h2>QR điểm danh hôm nay</h2>
       <div v-if="qrCode" class="qr-display">
         <img :src="qrCode" alt="QR code" />
-        <p class="user-name">Xin chào, {{ name }}!</p>
+        <p class="user-name" >Xin chào, <span @click="resetName">{{ name }}</span>!</p>
       </div>
       <div v-else>
         <button @click="generateQr">Tạo QR</button>
@@ -73,6 +73,12 @@ async function loadSystemInfo() {
   systemInfo.value = { os, arch, host };
 }
 
+function resetName() {
+  localStorage.removeItem('userName');
+  name.value = '';
+  nameStored.value = false;
+  qrCode.value = '';
+}
 
 function saveName() {
   if (!name.value) return alert('Nhập tên đi bro!');
@@ -181,8 +187,6 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-  background: #f3f4f6;
 }
 
 .card {
@@ -235,5 +239,9 @@ button {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
 }
 </style>
