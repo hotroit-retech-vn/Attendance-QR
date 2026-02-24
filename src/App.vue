@@ -109,7 +109,7 @@ async function generateQr() {
   );
 
 
-  url.value = `https://script.google.com/macros/s/AKfycbwRD41icYoGnNONq8lKqyKJdt5gy_dYoC49Ul0zLVIWHe8kdpdm1wLccoRP-o_HU46J/exec?data=${encodedPayload}`;
+  url.value = `https://script.google.com/macros/s/AKfycbxLyuC4YC2619EAII_yFbvp3Mhe_V7cAAJXbsUzON0MCFFGTrI_P0bmnaPiLKsMfjIF/exec?data=${encodedPayload}`;
   qrCode.value = await QRCode.toDataURL(url.value);
 }
 
