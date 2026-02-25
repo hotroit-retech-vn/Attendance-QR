@@ -1,6 +1,10 @@
 <template>
   <div class="container mt-10">
-    <Transition name="fade">
+    <div v-if="initializing" class="loading-state">
+      <!-- Màn hình chờ trung lập hoặc để trống -->
+    </div>
+    <template v-else>
+      <Transition name="fade">
       <div v-if="updateAvailable" class="update-overlay">
         <div class="update-card">
           <h2>🚀 Cập nhật hệ thống</h2>
@@ -37,7 +41,8 @@
       <div v-else>
         <button @click="generateQr">Tạo QR</button>
       </div>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -63,10 +68,13 @@ const systemInfo = ref({
   arch: '',
   host: '',
 });
-const name = ref('');
+
+const storedName = localStorage.getItem('userName');
+const name = ref(storedName || '');
+const nameStored = ref(!!storedName);
+const initializing = ref(true);
 const qrCode = ref('');
 const url = ref('');
-const nameStored = ref(false);
 
 async function loadSystemInfo() {
   const [os, arch, host] = await invoke<[string, string, string]>('get_system_info');
@@ -116,13 +124,13 @@ async function generateQr() {
 onMounted(async () => {
   await checkForUpdates();
   await loadSystemInfo();
-  const stored = localStorage.getItem('userName');
-  if (stored) {
-    nameStored.value = true;
-    name.value = stored;
-    generateQr();
+  
+  if (nameStored.value) {
+    await generateQr();
     setInterval(generateQr, 60 * 1000);
   }
+  
+  initializing.value = false;
 });
 </script>
 
@@ -243,5 +251,12 @@ button {
 
 .mt-10 {
   margin-top: 2.5rem;
+}
+
+.loading-state {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
