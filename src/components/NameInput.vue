@@ -3,8 +3,7 @@
     <div class="brand-header">
       <h1 class="brand-name">RETECH VN</h1>
     </div>
-    <h2>Đăng ký định danh</h2>
-    <p class="subtitle">Vui lòng nhập tên để tạo mã điểm danh</p>
+    <p class="subtitle">Vui lòng nhập tên</p>
     
     <input 
       v-model="internalName" 

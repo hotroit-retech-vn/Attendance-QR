@@ -21,7 +21,6 @@
       <p class="welcome-text">
         Xin chào, <span @click="$emit('reset')" class="user-name">{{ name }}</span>!
       </p>
-      <p class="refresh-note">Mã QR tự động cập nhật mỗi phút</p>
     </div>
     
     <div v-else class="qr-placeholder">
@@ -51,17 +50,20 @@ const today = computed(() => {
 
 <style scoped>
 .card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 1rem;
   max-width: 400px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .qr-header {
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .date-text {
