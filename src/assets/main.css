@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+  --retech-blue: #1e3a8a;
+  --retech-blue-dark: #152c6a;
+  --retech-gray: #f1f5f9;
+  --retech-text-main: #1e3a8a;
+  --retech-text-sub: #666;
+  --retech-border: #eee;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  background-color: var(--retech-gray);
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
+/* Các lớp dùng chung cho Card (nếu cần dùng ở nhiều nơi) */
+.card-base {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary-base {
+  padding: 0.9rem 1.5rem;
+  border-radius: 10px;
+  background: var(--retech-blue);
+  color: var(--white);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.btn-primary-base:hover {
+  background: var(--retech-blue-dark);
+}
